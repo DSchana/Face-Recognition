@@ -1,5 +1,6 @@
 #include "opencv2\core.hpp"
 #include "opencv2\face.hpp"
+#include "opencv2\facerec.hpp"
 #include "opencv2\highgui.hpp"
 #include "opencv2\imgproc.hpp"
 #include <iostream>
@@ -96,7 +97,7 @@ int main(int argc, const char *argv[]) {
 	// It is trained with the images from the given CSV file.
 
 	// TODO: Setup model
-	// Ptr<FaceRecognizer> model =
+	//Ptr<FaceRecognizer> model =
 
 	return 0;
 }
