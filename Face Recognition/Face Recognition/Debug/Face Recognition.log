@@ -1,1 +1,3 @@
-﻿LINK : fatal error LNK1561: entry point must be defined
+﻿  main.cpp
+  Face Recognition.vcxproj -> C:\Users\DSchana\Documents\GitHub\Face-Recognotion\Face Recognition\Debug\Face Recognition.exe
+  Face Recognition.vcxproj -> C:\Users\DSchana\Documents\GitHub\Face-Recognotion\Face Recognition\Debug\Face Recognition.pdb (Partial PDB)
