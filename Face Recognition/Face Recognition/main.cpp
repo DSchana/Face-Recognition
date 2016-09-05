@@ -41,7 +41,7 @@ int main(int argc, const char **argv) {
 
 		detectFace(frame);
 
-		if (char(waitKey(35) == 27)) {
+		if (char(waitKey(10) == 27)) {
 			break;
 		}
 	}
@@ -67,8 +67,9 @@ void detectFace(Mat frame) {
 	face_cascade.detectMultiScale(frame_gray, faces, 1.1, 2, 0 | CV_HAAR_SCALE_IMAGE, Size(80, 80));
 
 	for (size_t i = 0; i < faces.size(); i++) {
-		Point centre(faces[i].x + faces[i].width / 2, faces[i].y + faces[i].width / 2);
-		ellipse(frame, centre, Size(faces[i].width / 2, faces[i].height / 2), 0, 0, 360, Scalar(0, 255, 0), 4);
+		//Point centre(faces[i].x + faces[i].width / 2, faces[i].y + faces[i].width / 2);
+		//ellipse(frame, centre, Size(faces[i].width / 2, faces[i].height / 2), 0, 0, 360, Scalar(0, 255, 0), 4);
+		rectangle(frame, Point(faces[i].x, faces[i].y), Point(faces[i].x + faces[i].width, faces[i].y + faces[i].height), Scalar(229, 181, 51), 4);
 	}
 
 	imshow(window_name, frame);
