@@ -44,6 +44,11 @@ int main(int argc, const char **argv) {
 		if (char(waitKey(10) == 27)) {
 			break;
 		}
+		// save screenshot
+		if (char(waitKey(10) == char('c'))) {
+			printf("Saving\n");
+			imwrite("current save.jpg", frame);
+		}
 	}
 
 	return 0;
