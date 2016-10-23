@@ -1,2 +1,2 @@
-# Face-Recognotion
+# Face Recognotion
 Facial recognition for Optimotive
