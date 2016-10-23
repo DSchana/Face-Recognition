@@ -15,7 +15,9 @@ opencv2/imgproc.hpp
 /Users/DSchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/opencv2/imgproc.hpp
 iostream
 -
-stdio.h
+cstdio
+-
+vector
 -
 
 /usr/local/include/opencv/cxcore.h
