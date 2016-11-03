@@ -82,14 +82,6 @@ void toColour(int num, Scalar &dst) {
 	// dst.r = (num >> 16) &0xFF;
 }
 
-int averageColour(Mat  cols, Scalar dst) {
-	int retVal = 0;
-	for (int i = 0; i < cols.size(); i++)
-		retVal += i;
-
-	return retVal / cols.size();
-}
-
 void detectFace(Mat frame, Scalar &face_colour) {
 	vector<Rect> faces;
 	Mat frame_gray;
@@ -114,11 +106,13 @@ void detectFace(Mat frame, Scalar &face_colour) {
 		rectangle(frame, Point(faces[i].x, faces[i].y), Point(faces[i].x + faces[i].width, faces[i].y + faces[i].height), Scalar(229, 181, 51), 4);
 	}
 
-	int col = frame.at<int>(main_face.x + main_face.width / 2, main_face.y + main_face.height / 2);  // TODO: Average the colour of the pixels in the face region
-        toColour(col, face_colour);
+	//int col = frame.at<int>(main_face.x + main_face.width / 2, main_face.y + main_face.height / 2);  // TODO: Average the colour of the pixels in the face region
+        //toColour(col, face_colour);
+
+	main_face_colour = mean(frame(main_face));
 
 	circle(frame, Point(main_face.x + main_face.width / 2, main_face.y + main_face.height / 2), 4, face_colour, 4);
-	rectangle(frame, main_face, face_colour, 5);  // Indicate main face
+	rectangle(frame, main_face, main_face_colour, 5);  // Indicate main face
 	
 	//cout << face_colour << endl;
 }
