@@ -4,22 +4,31 @@
 
 #include <iostream>
 #include <cstdio>
+#include <cmath>
 #include <vector>
+
+// Screen resolution constants
+#define R_WIDTH 640
+#define R_HEIGHT 480
 
 using namespace std;
 using namespace cv;
 
 // Function headers
 void detectFace(Mat frame, Scalar &face_colour);
+void makeMesh(Mat face, Rect loc);
 void terminate(VideoCapture &cap);
 void toColour(int num, Scalar &dst);
+void showUserId(Mat frame, Scalar colour, int face_count);
 int averageColour(vector<int> cols);
 
-// Global variables
+// Global Constants
 string face_cascade_name = "Data/haarcascade_frontalface_alt.xml";
 CascadeClassifier face_cascade;
 string window_name = "Face detection";
 RNG random_num_gen(12345);
+int low_canny_thresh = 45;
+int canny_ratio = 3;
 
 struct Colour {
 	int r, g, b;
@@ -31,23 +40,23 @@ int main(int argc, const char **argv) {
 	Scalar face_colour;
 
 	if (!capture.isOpened()) {
-		printf("Error when opening camera");
+		printf("Error when opening camera\n");
 		return -1;
 	}
 
 	// Set resolution
-	capture.set(CV_CAP_PROP_FRAME_WIDTH, 640);
-	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
+	capture.set(CV_CAP_PROP_FRAME_WIDTH, R_WIDTH);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, R_HEIGHT);
 
 	// Load the cascades
 	if (!face_cascade.load(face_cascade_name)) {
-		printf("error loading");
+		printf("error loading\n");
 		return -1;
 	}
 
 	while (capture.read(frame)) {
 		if (frame.empty()) {
-			printf("No captured frame");
+			printf("No captured frame\n");
 			break;
 		}
 
@@ -82,6 +91,49 @@ void toColour(int num, Scalar &dst) {
 	// dst.r = (num >> 16) &0xFF;
 }
 
+void showUserId(Mat frame, Scalar colour, int face_count) {
+	if (face_count == 0) {
+		putText(frame, "No User Detected", Point(10, 50), 5, 3, Scalar(255, 255, 255), 2);
+		return;
+	}
+
+	Scalar diff_black = colour - Scalar(0, 0, 0);
+	Scalar diff_white = Scalar(255, 255, 255) - colour;
+	//cout << diff_black << "\t" << diff_white << endl;
+
+	double v_b = sqrt(pow(diff_black[0], 2) + pow(diff_black[1], 2) + pow(diff_black[2], 2));
+	double v_w = sqrt(pow(diff_white[0], 2) + pow(diff_white[1], 2) + pow(diff_white[2], 2));
+
+	if (v_w > v_b) {
+		// id 1, me. or any other brown fella
+		putText(frame, "User 1 Detected", Point(10, 50), 5, 3, Scalar(255, 255, 255), 2);
+	}
+	else {
+		// id 2, roman. or another privileged fella
+		putText(frame, "User 2 Detected", Point(10, 50), 5, 3, Scalar(255, 255, 255), 2);
+	}
+}
+
+void makeMesh(Mat face, Rect loc) {
+	Mat edges, disp(R_HEIGHT, R_WIDTH, CV_8UC3);
+
+	disp = Scalar::all(0);
+
+	cvtColor(face, edges, CV_BGR2GRAY);
+	cvtColor(disp, disp, CV_BGR2GRAY);
+	
+	blur(edges, edges, Size(3, 3));
+	Canny(edges, edges, low_canny_thresh, low_canny_thresh * canny_ratio);
+
+	for (int i = 0; i < loc.height; i++) {
+		for (int j = 0; j < loc.width; j++) {
+			disp.at<Vec3b>(loc.y + i, loc.x + j) = edges.at<Vec3b>(i, j);
+		}
+	}
+
+	imshow("Mesh", disp);
+}
+
 void detectFace(Mat frame, Scalar &face_colour) {
 	vector<Rect> faces;
 	Mat frame_gray;
@@ -112,7 +164,13 @@ void detectFace(Mat frame, Scalar &face_colour) {
 	main_face_colour = mean(frame(main_face));
 
 	circle(frame, Point(main_face.x + main_face.width / 2, main_face.y + main_face.height / 2), 4, face_colour, 4);
-	rectangle(frame, main_face, main_face_colour, 5);  // Indicate main face
 	
+	if (main_face != Rect(0, 0, 0, 0))  // Send to mask maker
+		makeMesh(frame(main_face), main_face);
+
+	rectangle(frame, main_face, main_face_colour, 5);  // Indicate main face
+
+	showUserId(frame, main_face_colour, faces.size());
+		
 	//cout << face_colour << endl;
 }
