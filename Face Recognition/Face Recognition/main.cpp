@@ -97,8 +97,12 @@ void showUserId(Mat frame, Scalar colour, int face_count) {
 		return;
 	}
 
-	Scalar diff_black = colour - Scalar(0, 0, 0);
-	Scalar diff_white = Scalar(255, 255, 255) - colour;
+	Scalar diff_black = colour - Scalar(33, 48, 94);
+	Scalar diff_white = Scalar(173, 224, 237) - colour;
+
+	//Scalar diff_black = colour - Scalar(0, 0, 0);
+        //Scalar diff_white = Scalar(255, 255, 255) - colour;
+
 	//cout << diff_black << "\t" << diff_white << endl;
 
 	double v_b = sqrt(pow(diff_black[0], 2) + pow(diff_black[1], 2) + pow(diff_black[2], 2));
@@ -125,9 +129,13 @@ void makeMesh(Mat face, Rect loc) {
 	blur(edges, edges, Size(3, 3));
 	Canny(edges, edges, low_canny_thresh, low_canny_thresh * canny_ratio);
 
+	threshold(edges, edges, 100, 255, cv::THRESH_BINARY);
+
 	for (int i = 0; i < loc.height; i++) {
 		for (int j = 0; j < loc.width; j++) {
-			disp.at<Vec3b>(loc.y + i, loc.x + j) = edges.at<Vec3b>(i, j);
+			if (edges.at<Vec3b>(i, j) == Vec3b(255, 255, 255)) {
+				disp.at<Vec3b>(loc.y + i, loc.x + j) = Vec3b(255, 255, 255);
+			}
 		}
 	}
 

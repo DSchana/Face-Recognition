@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/FaceRecognition.dir/Users/DSchana/Documents/GitHub/Face-Recognotion/Face_Recognition/Face_Recognition/main.cpp.o"
+  "CMakeFiles/FaceRecognition.dir/Users/dilpreetchana/Documents/GitHub/Face-Recognotion/Face_Recognition/Face_Recognition/main.cpp.o"
   "FaceRecognition.pdb"
   "FaceRecognition"
 )

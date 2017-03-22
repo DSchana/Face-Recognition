@@ -6,13 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/Users/DSchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/main.cpp
+/Users/dilpreetchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/main.cpp
 opencv2/highgui.hpp
-/Users/DSchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/opencv2/highgui.hpp
+/Users/dilpreetchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/opencv2/highgui.hpp
 opencv2/objdetect.hpp
-/Users/DSchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/opencv2/objdetect.hpp
+/Users/dilpreetchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/opencv2/objdetect.hpp
 opencv2/imgproc.hpp
-/Users/DSchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/opencv2/imgproc.hpp
+/Users/dilpreetchana/Documents/GitHub/Face-Recognotion/Face Recognition/Face Recognition/opencv2/imgproc.hpp
 iostream
 -
 cstdio
