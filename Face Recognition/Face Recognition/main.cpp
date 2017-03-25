@@ -98,7 +98,7 @@ void showUserId(Mat frame, Scalar colour, int face_count) {
 	}
 
 	Scalar diff_black = colour - Scalar(33, 48, 94);
-	Scalar diff_white = Scalar(173, 224, 237) - colour;
+	Scalar diff_white = Scalar(196, 229, 240) - colour;
 
 	//Scalar diff_black = colour - Scalar(0, 0, 0);
         //Scalar diff_white = Scalar(255, 255, 255) - colour;
@@ -111,10 +111,12 @@ void showUserId(Mat frame, Scalar colour, int face_count) {
 	if (v_w > v_b) {
 		// id 1, me. or any other brown fella
 		putText(frame, "User 1 Detected", Point(10, 50), 5, 3, Scalar(255, 255, 255), 2);
+		// cout << "1" << endl;
 	}
 	else {
 		// id 2, roman. or another privileged fella
 		putText(frame, "User 2 Detected", Point(10, 50), 5, 3, Scalar(255, 255, 255), 2);
+		// cout << "2" << endl;
 	}
 }
 
