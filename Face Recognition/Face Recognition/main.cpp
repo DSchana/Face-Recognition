@@ -141,7 +141,7 @@ void makeMesh(Mat face, Rect loc) {
 		}
 	}
 
-	imshow("Mesh", disp);
+	//imshow("Mesh", disp);
 }
 
 void detectFace(Mat frame, Scalar &face_colour) {

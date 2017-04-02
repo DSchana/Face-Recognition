@@ -1,1 +1,0 @@
-/Users/dilpreetchana/Documents/GitHub/Face-Recognotion/Unix/CMakeFiles/FaceRecognition.dir
