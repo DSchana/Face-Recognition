@@ -38,7 +38,7 @@ int main(int argc, const char **argv) {
 	VideoCapture capture(0);
 	Mat frame;
 	Scalar face_colour;
-
+	printf("Here we go\n");
 	if (!capture.isOpened()) {
 		printf("Error when opening camera\n");
 		return -1;
@@ -50,7 +50,7 @@ int main(int argc, const char **argv) {
 
 	// Load the cascades
 	if (!face_cascade.load(face_cascade_name)) {
-		printf("error loading\n");
+		printf("Error loading\n");
 		return -1;
 	}
 

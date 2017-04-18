@@ -1,0 +1,3 @@
+/Users/DSchana/Documents/GitHub/Face-Recognotion/Unix/CMakeFiles/rebuild_cache.dir
+/Users/DSchana/Documents/GitHub/Face-Recognotion/Unix/CMakeFiles/edit_cache.dir
+/Users/DSchana/Documents/GitHub/Face-Recognotion/Unix/CMakeFiles/FaceRecognition.dir
