@@ -23,8 +23,10 @@ void showUserId(Mat frame, Scalar colour, int face_count);
 int averageColour(vector<int> cols);
 
 // Global Constants
-string face_cascade_name = "Data/haarcascade_frontalface_alt.xml";
+string face_cascade_name = "haarcascade_frontalface_alt.xml";
+string eye_cascade_name = "haarcascade_eye.xml";
 CascadeClassifier face_cascade;
+CascadeClassifier eye_cascade;
 string window_name = "Face detection";
 RNG random_num_gen(12345);
 int low_canny_thresh = 45;
@@ -49,8 +51,12 @@ int main(int argc, const char **argv) {
 	capture.set(CV_CAP_PROP_FRAME_HEIGHT, R_HEIGHT);
 
 	// Load the cascades
-	if (!face_cascade.load(face_cascade_name)) {
-		printf("Error loading\n");
+	if (!face_cascade.load("Data/" + face_cascade_name)) {
+		printf("Error loading face cascade\n");
+		return -1;
+	}
+	if (!eye_cascade.load("Data/" + eye_cascade_name)) {
+		printf("Error loading eye cascade\n");
 		return -1;
 	}
 
@@ -145,7 +151,7 @@ void makeMesh(Mat face, Rect loc) {
 }
 
 void detectFace(Mat frame, Scalar &face_colour) {
-	vector<Rect> faces;
+	vector<Rect> faces, eyes;
 	Mat frame_gray;
 	Scalar main_face_colour;
  
@@ -179,6 +185,13 @@ void detectFace(Mat frame, Scalar &face_colour) {
 		makeMesh(frame(main_face), main_face);
 
 	rectangle(frame, main_face, main_face_colour, 5);  // Indicate main face
+
+	// Find eyes in main face
+	eye_cascade.detectMultiScale(frame_gray(main_face), eyes, 1.1, 2);
+
+	for (size_t i = 0; i < eyes.size(); i++) {
+		circle(frame, Point(main_face.x + eyes[i].x + (eyes[i].width / 2), main_face.y + eyes[i].y + (eyes[i].height / 2)), eyes[i].width / 2, face_colour, 4);
+	}
 
 	showUserId(frame, main_face_colour, faces.size());
 		
