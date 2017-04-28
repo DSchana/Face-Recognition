@@ -1,3 +1,4 @@
 ﻿  main.cpp
-  Face Recognition.vcxproj -> C:\Users\DSchana\Documents\GitHub\Face-Recognotion\Face Recognition\Debug\Face Recognition.exe
-  Face Recognition.vcxproj -> C:\Users\DSchana\Documents\GitHub\Face-Recognotion\Face Recognition\Debug\Face Recognition.pdb (Partial PDB)
+  disreguard.cpp
+c1xx : fatal error C1083: Cannot open source file: 'disreguard.cpp': No such file or directory
+  Generating Code...
