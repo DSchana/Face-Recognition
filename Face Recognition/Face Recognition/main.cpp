@@ -24,7 +24,7 @@ int averageColour(vector<int> cols);
 
 // Global Constants
 string face_cascade_name = "haarcascade_frontalface_alt.xml";
-string eye_cascade_name = "haarcascade_eye.xml";
+string eye_cascade_name = "ojoD.xml";
 CascadeClassifier face_cascade;
 CascadeClassifier eye_cascade;
 string window_name = "Face detection";
@@ -159,6 +159,7 @@ void detectFace(Mat frame, Scalar &face_colour) {
 	equalizeHist(frame_gray, frame_gray);
 
 	Rect main_face = Rect(0, 0, 0, 0);  // hold the main face to be recognized
+	Rect s_eye_area = Rect(0, 0, 0, 0);  // Area to search for eyes in
 
 	// Detect faces using the cascade
 	face_cascade.detectMultiScale(frame_gray, faces, 1.1, 2, 0 | CV_HAAR_SCALE_IMAGE, Size(80, 80));
@@ -187,7 +188,10 @@ void detectFace(Mat frame, Scalar &face_colour) {
 	rectangle(frame, main_face, main_face_colour, 5);  // Indicate main face
 
 	// Find eyes in main face
-	eye_cascade.detectMultiScale(frame_gray(main_face), eyes, 1.1, 2);
+	s_eye_area = Rect(main_face.x, main_face.y + (main_face.height * 0.1), main_face.width, main_face.height / 2);
+	rectangle(frame, s_eye_area, Scalar(255, 255, 255), 5);
+
+	eye_cascade.detectMultiScale(frame_gray(s_eye_area), eyes, 1.1, 2);
 
 	for (size_t i = 0; i < eyes.size(); i++) {
 		circle(frame, Point(main_face.x + eyes[i].x + (eyes[i].width / 2), main_face.y + eyes[i].y + (eyes[i].height / 2)), eyes[i].width / 2, face_colour, 4);
