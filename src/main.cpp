@@ -189,9 +189,9 @@ void detectFace(Mat frame, Scalar &face_colour) {
 
 	// Find eyes in main face
 	s_eye_area = Rect(main_face.x, main_face.y + (main_face.height * 0.1), main_face.width, main_face.height / 2);
-	rectangle(frame_gray, s_eye_area, Scalar(255, 255, 255), 5);
+	rectangle(frame, s_eye_area, Scalar(255, 255, 255), 5);
 
-	eye_cascade.detectMultiScale(frame(s_eye_area), eyes, 1.1, 2);
+	eye_cascade.detectMultiScale(frame_gray(s_eye_area), eyes, 1.1, 2);
 
 	for (size_t i = 0; i < eyes.size(); i++) {
 		circle(frame, Point(main_face.x + eyes[i].x + (eyes[i].width / 2), main_face.y + eyes[i].y + (eyes[i].height / 2)), eyes[i].width / 2, face_colour, 4);
