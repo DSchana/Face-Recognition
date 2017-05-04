@@ -1,3 +1,5 @@
+// TODO: Remember last locations of eyes to filter false positives
+
 #include "opencv2/highgui.hpp"
 #include "opencv2/objdetect.hpp"
 #include "opencv2/imgproc.hpp"
@@ -16,11 +18,11 @@ using namespace cv;
 
 // Function headers
 void detectFace(Mat frame, Scalar &face_colour);
+void detectEyes(Mat frame);
 void makeMesh(Mat face, Rect loc);
 void terminate(VideoCapture &cap);
 void toColour(int num, Scalar &dst);
 void showUserId(Mat frame, Scalar colour, int face_count);
-int averageColour(vector<int> cols);
 
 // Global Constants
 string face_cascade_name = "haarcascade_frontalface_alt.xml";
@@ -31,10 +33,6 @@ string window_name = "Face detection";
 RNG random_num_gen(12345);
 int low_canny_thresh = 45;
 int canny_ratio = 3;
-
-struct Colour {
-	int r, g, b;
-};
 
 int main(int argc, const char **argv) {
 	VideoCapture capture(0);
@@ -87,14 +85,6 @@ void terminate(VideoCapture &cap) {
 	destroyAllWindows();
 	cap.release();
 	exit(EXIT_SUCCESS);
-}
-
-// Covert an integer colour into BGR format
-void toColour(int num, Scalar &dst) {
-	dst = Scalar(num &0xFF, (num >> 8) &0xFF, (num >> 16) &0xFF);
-	// dst.b = num &0xFF;
-	// dst.g = (num >> 8) &0xFF;
-	// dst.r = (num >> 16) &0xFF;
 }
 
 void showUserId(Mat frame, Scalar colour, int face_count) {
@@ -152,11 +142,13 @@ void makeMesh(Mat face, Rect loc) {
 
 void detectFace(Mat frame, Scalar &face_colour) {
 	vector<Rect> faces, eyes;
-	Mat frame_gray;
+	Mat frame_gray, frame_gray_blur;
 	Scalar main_face_colour;
  
 	cvtColor(frame, frame_gray, CV_BGR2GRAY);
 	equalizeHist(frame_gray, frame_gray);
+
+	GaussianBlur(frame_gray, frame_gray_blur, Size(3, 3), 0, 0);
 
 	Rect main_face = Rect(0, 0, 0, 0);  // hold the main face to be recognized
 	Rect s_eye_area = Rect(0, 0, 0, 0);  // Area to search for eyes in
@@ -175,9 +167,6 @@ void detectFace(Mat frame, Scalar &face_colour) {
 		rectangle(frame, Point(faces[i].x, faces[i].y), Point(faces[i].x + faces[i].width, faces[i].y + faces[i].height), Scalar(229, 181, 51), 4);
 	}
 
-	//int col = frame.at<int>(main_face.x + main_face.width / 2, main_face.y + main_face.height / 2);  // TODO: Average the colour of the pixels in the face region
-        //toColour(col, face_colour);
-
 	main_face_colour = mean(frame(main_face));
 
 	circle(frame, Point(main_face.x + main_face.width / 2, main_face.y + main_face.height / 2), 4, face_colour, 4);
@@ -191,7 +180,7 @@ void detectFace(Mat frame, Scalar &face_colour) {
 	s_eye_area = Rect(main_face.x, main_face.y + (main_face.height * 0.1), main_face.width, main_face.height / 2);
 	rectangle(frame, s_eye_area, Scalar(255, 255, 255), 5);
 
-	eye_cascade.detectMultiScale(frame_gray(s_eye_area), eyes, 1.1, 2);
+	eye_cascade.detectMultiScale(frame_gray_blur(s_eye_area), eyes, 1.1, 2);
 
 	for (size_t i = 0; i < eyes.size(); i++) {
 		circle(frame, Point(main_face.x + eyes[i].x + (eyes[i].width / 2), main_face.y + eyes[i].y + (eyes[i].height / 2)), eyes[i].width / 2, face_colour, 4);
@@ -200,4 +189,25 @@ void detectFace(Mat frame, Scalar &face_colour) {
 	showUserId(frame, main_face_colour, faces.size());
 		
 	//cout << face_colour << endl;
+}
+
+void detectEye(Mat frame, Rect main_face) {
+	vector<Rect> eyes;
+	Mat frame_gray, frame_gray_blur;
+
+	cvtColor(frame, frame_gray, CV_BGR2GRAY);
+	equilizeHist(frame_gray, frame_gray);
+
+	GaussianBlur(frame_gray, frame_gray_blur, Size(3, 3), 0, 0);
+
+	Rect s_eye_area = Rect(0, 0, 0, 0);  // Area to search for eyes in
+
+	s_eye_area = Rect(main_face.x, main_face.y + (main_face.height * 0.1), main_face.width, main_face.height / 2);
+	rectangle(frame, s_eye_area, Scalar(255, 255, 255), 5);
+
+	eye_cascade.detectMultiScale(frame_gray_blur(s_eye_area), eyes, 1.1, 2);
+
+	for (size_t i = 0, i < eyes.size(); i++) {
+		circle(frame, Point(main_face.x + eyes[i].x + (eyes[i].width / 2), main_face.y + eyes[i].y + (eyes[i].height / 2)), eyes[i].width / 2, face_colour, 4);
+	}
 }
