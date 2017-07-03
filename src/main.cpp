@@ -10,7 +10,7 @@
 #include <vector>
 
 // Screen resolution constants
-#define R_WIDTH 640
+#define R_WIDTH  640
 #define R_HEIGHT 480
 
 using namespace std;
@@ -38,6 +38,8 @@ int main(int argc, const char **argv) {
 	VideoCapture capture(0);
 	Mat frame;
 	Scalar face_colour;
+
+	// Check if camera is open
 	printf("Here we go\n");
 	if (!capture.isOpened()) {
 		printf("Error when opening camera\n");
